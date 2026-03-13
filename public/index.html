@@ -1,70 +1,34 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard Monitoring PC</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #333; padding: 8px; text-align: center; }
-    th { background-color: #eee; }
-    .green { background-color: #b6fcb6; }
-    .yellow { background-color: #fff8b6; }
-    .red { background-color: #fcb6b6; }
-  </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <title>Monitoring PC</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Dashboard Monitoring PC</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Device</th>
-        <th>CPU</th>
-        <th>RAM</th>
-        <th>Disk</th>
-        <th>Uptime</th>
-      </tr>
-    </thead>
-    <tbody id="data-table">
-    </tbody>
-  </table>
+    <div id="top-bar">
+        <h1>MONITORING FOR PERSONAL COMPUTER</h1>
+        <button id="theme-toggle" onclick="toggleTheme()">☀️ Clair</button>
+    </div>
+    
+    <div id="stats-bar">
+        <div class="stat-badge online-badge">● <span id="count-online">0</span> ONLINE</div>
+        <div class="stat-badge offline-badge">● <span id="count-offline">0</span> OFFLINE</div>
+        <div class="stat-badge total-badge">📡 <span id="count-total">0</span> TOTAL</div>
+    </div>
+    
+    <div id="devices-container">
+        <!-- Les cartes des PC seront ajoutées ici via JS -->
+    </div>
+    <!-- Modal -->
+    <div id="modal-overlay" onclick="closeModal()">
+        <div id="modal-content" onclick="event.stopPropagation()"></div>
+    </div>
 
-  <script>
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/data");
-        const data = await res.json();
-        const tbody = document.getElementById("data-table");
-        tbody.innerHTML = ""; // reset table
-
-        data.forEach(d => {
-          const tr = document.createElement("tr");
-
-          // Helper pour coloriser cellule selon état
-          function colorClass(state) {
-            if(state === "green") return "green";
-            if(state === "yellow") return "yellow";
-            if(state === "red") return "red";
-            return "";
-          }
-
-          tr.innerHTML = `
-            <td>${d.device_id}</td>
-            <td class="${colorClass(d.cpu_state)}">${d.cpu}% [${d.cpu_state}]</td>
-            <td class="${colorClass(d.ram_state)}">${d.ram_used}/${d.ram_total} MB [${d.ram_state}]</td>
-            <td class="${colorClass(d.disk_state)}">${d.disk_used}/${d.disk_total} GB [${d.disk_state}]</td>
-            <td>${d.uptime_hours}h ${d.uptime_minutes}min</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } catch(e) {
-        console.error("Erreur fetch data:", e);
-      }
-    }
-
-    // Rafraîchit toutes les secondes
-    setInterval(fetchData, 1000);
-    fetchData();
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
